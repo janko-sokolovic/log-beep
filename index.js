@@ -1,4 +1,14 @@
 
+/**
+ * Get notified if your code run into warning/error state.
+ * Configure frequencies for your sounds.
+ * 
+ * Contribute or make a pull request on https://github.com/jasofalcon/log-beep
+ * 
+ * Thank you for using log-beep
+ * 
+ * version 0.2.0
+ */
 var LogBeep = (function (global) {
 
     var DEFAULT_FREQUENCY = {
