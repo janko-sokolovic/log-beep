@@ -1,6 +1,6 @@
 # Log Beep
 
-version 0.2.0
+version 1.0.0
 
 ### Description
 Useful library that lets you get notified whenever you log the error or warning with different beep sounds. 
@@ -8,12 +8,7 @@ Easily configurable and it doesn't make sounds for production build. Just initia
 
 ## Installation
 
-In a browser:
-```html
-<script src="log-beep.js"></script>
-```
 
-Using npm:
 ```shell
 $ npm i --save log-beep
 ```
