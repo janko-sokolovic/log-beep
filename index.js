@@ -1,23 +1,33 @@
 
-var LOGGER = (function (global) {
+var LogBeep = (function (global) {
 
-    FREQUENCY = {
-        WARN: 400,
-        ERROR: 800
+    var DEFAULT_FREQUENCY = {
+        WARN: 200,
+        ERROR: 400
     }
 
-    var INTERVAL = 250
     var RAMP_VALUE = 0.00001
-    var RAMP_DURATION = 3
+    var RAMP_DURATION = 2
 
     // Default config values
-    var logBeep = {
-        env: "dev"
+    var defaultConfig = {
+        env: "dev",
+        frequency: DEFAULT_FREQUENCY
     }
 
+    /**
+     * Main object containing audio context and configuration
+     */
+    var logBeep
+
     function config(options) {
-        options = options || logBeep
-        logBeep.context = new (global.AudioContext || global.webkitAudioContext)();
+        options = options || {}
+
+        config = Object.create(defaultConfig)
+
+        logBeep = Object.assign(options, config)
+
+        logBeep.context = new (global.AudioContext || global.webkitAudioContext)()
     }
 
     function info(message, ...args) {
@@ -25,44 +35,47 @@ var LOGGER = (function (global) {
     }
 
     function warn(message, ...args) {
-        playWarn()
         console.warn(message, args)
+
+        if (logBeep.env === 'dev') playWarn()
     }
 
     function error(message, ...args) {
-        playError()
         console.error(message, args)
+
+        if (logBeep.env === 'dev') playError()
     }
 
     function playError() {
-        play(FREQUENCY.ERROR)
+        play(logBeep.frequency.ERROR)
     }
 
     function playWarn() {
-        play(FREQUENCY.WARN)
+        play(logBeep.frequency.WARN)
     }
 
     function play(frequency) {
 
         var currentTime = logBeep.context.currentTime
-        logBeep.oscillator = logBeep.context.createOscillator()
-        logBeep.gain = logBeep.context.createGain()
-        logBeep.oscillator.type = 'sine'
+        var oscillator = logBeep.context.createOscillator()
+        var gain = logBeep.context.createGain()
 
-        logBeep.oscillator.connect(logBeep.gain)
-        logBeep.gain.connect(logBeep.context.destination)
+        oscillator.type = 'sine'
 
-        logBeep.gain.gain.setValueAtTime(logBeep.gain.gain.value, currentTime)
-        logBeep.gain.gain.exponentialRampToValueAtTime(RAMP_VALUE, currentTime + RAMP_DURATION)
+        oscillator.connect(gain)
+        gain.connect(logBeep.context.destination)
 
-        logBeep.oscillator.onended = function () {
-            logBeep.gain.disconnect(logBeep.context.destination)
-            logBeep.oscillator.disconnect(logBeep.gain)
+        gain.gain.setValueAtTime(gain.gain.value, currentTime)
+        gain.gain.exponentialRampToValueAtTime(RAMP_VALUE, currentTime + RAMP_DURATION)
+
+        oscillator.onended = function () {
+            gain.disconnect(logBeep.context.destination)
+            oscillator.disconnect(gain)
         }
 
-        logBeep.oscillator.frequency.setValueAtTime(frequency, currentTime)
-        logBeep.oscillator.start(currentTime)
-        logBeep.oscillator.stop(currentTime + RAMP_DURATION)
+        oscillator.frequency.setValueAtTime(frequency, currentTime)
+        oscillator.start(currentTime)
+        oscillator.stop(currentTime + RAMP_DURATION)
     }
 
     return {
@@ -74,4 +87,4 @@ var LOGGER = (function (global) {
 
 })(global)
 
-module.exports = LOGGER
+module.exports = LogBeep
