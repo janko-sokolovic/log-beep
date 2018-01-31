@@ -1,6 +1,6 @@
 {
   "name": "log-beep",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Get notified whenever error appears in your console log.",
   "main": "index.js",
   "scripts": {

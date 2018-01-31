@@ -1,10 +1,9 @@
 # Log Beep
 
-version 1.0.0
+Useful library that lets you get notified whenever you log an error or a warning with different beep sounds. 
+Easily configurable. It doesn't make sounds for production build. Just initialize it with env='prod'
 
-### Description
-Useful library that lets you get notified whenever you log the error or warning with different beep sounds. 
-Easily configurable and it doesn't make sounds for production build. Just initialize it with env = 'prod'
+version 1.0.1
 
 ## Installation
 
@@ -18,10 +17,11 @@ $ npm i --save log-beep
 ```js
 // !! Don't forget to turn on speakers!!
 
-var LogBeep = require('log-beep')
+var LogBeep = require('log-beep') 
+// or use ES6: import LogBeep from 'log-beep'
 
 var options = {
-    env: 'prod'  // default is 'dev',
+    env: 'dev'  // default
     frequency: {
         WARN: 300, // default is 200
         ERROR: 600 // default is 400
@@ -38,4 +38,4 @@ LogBeep.error("Bad attribute provided, should not be null", obj)
 ```
 
 ## Contribute
-Feel free to add ideas for expansion and create a pull request should you find some bug or want to extend the lib
+Feel free to create a pull request should you find a bug or want to extend the lib with new features.
